@@ -1,3 +1,4 @@
+const API_URL = window.env.API_URL;
 // Services
 
 // Auth
@@ -43,22 +44,12 @@ angular.module("outfitologyApp").factory("AuthService", [
 angular.module("outfitologyApp").factory("UnsplashService", [
     "$http",
     function ($http) {
-        const DEFAULT_SEARCH_QUERY = "fashion, streetwear, outfit, casual outfit";
-
         return {
             fetchImages: function (userQuery) {
                 return $http({
                     method: "GET",
-                    url: `https://api.unsplash.com/photos/random`,
-                    headers: {
-                        SameSite: "None",
-                        Secure: true,
-                    },
-                    params: {
-                        count: 30,
-                        query: `${userQuery}, fashion` || DEFAULT_SEARCH_QUERY,
-                        client_id: UNSPLASH_ACCESS_KEY,
-                    },
+                    url: `${API_URL}/api/unsplash`,
+                    params: { query: userQuery || "fashion, streetwear, outfit, casual outfit" },
                 });
             },
         };
