@@ -1,3 +1,4 @@
+const API_URL = import.meta.env.VITE_API_URL;
 // Services
 
 // Auth
@@ -7,14 +8,14 @@ angular.module("outfitologyApp").factory("AuthService", [
     function ($http, $q) {
         return {
             login: function (username, password) {
-                return $http.post("http://localhost:4000/login", {
+                return $http.post(`${API_URL}/login`, {
                     username: username,
                     password: password,
                 });
             },
 
             register: function (username, email, password) {
-                return $http.post("http://localhost:4000/register", {
+                return $http.post(`${API_URL}/register`, {
                     username: username,
                     email: email,
                     password: password,
@@ -137,7 +138,7 @@ angular
 
             vm.fetchOutfits = function () {
                 $http
-                    .get("http://localhost:4000/outfits")
+                    .get(`${API_URL}/outfits`)
                     .then(function (response) {
                         vm.userOutfits = response.data.map(function (outfit) {
                             return {
@@ -194,7 +195,7 @@ angular
                 }
 
                 $http
-                    .get(`http://localhost:4000/comments/${outfit._id}`)
+                    .get(`${API_URL}/comments/${outfit._id}`)
                     .then(function (response) {
                         outfit.comments = response.data;
                     })
@@ -227,7 +228,7 @@ angular
                 };
 
                 $http
-                    .post("http://localhost:4000/comments", commentData)
+                    .post(`${API_URL}/comments`, commentData)
                     .then(function (response) {
                         outfit.comments.unshift(response.data.comment);
                         outfit.newComment = "";
@@ -249,7 +250,7 @@ angular
                 if (newText === null || newText.trim() === "") return;
 
                 $http
-                    .put(`http://localhost:4000/comments/${comment._id}`, {
+                    .put(`${API_URL}/comments/${comment._id}`, {
                         text: newText,
                     })
                     .then(function (response) {
@@ -279,7 +280,7 @@ angular
                 }).then((willDelete) => {
                     if (willDelete) {
                         $http
-                            .delete(`http://localhost:4000/comments/${comment._id}`)
+                            .delete(`${API_URL}/comments/${comment._id}`)
                             .then(function () {
                                 const index = outfit.comments.findIndex((c) => c._id === comment._id);
                                 if (index !== -1) {
@@ -301,7 +302,7 @@ angular
                 if (!outfit._id || !userData) return;
 
                 $http
-                    .get(`http://localhost:4000/outfits/${outfit._id}/likes?userId=${userData._id}`)
+                    .get(`${API_URL}/outfits/${outfit._id}/likes?userId=${userData._id}`)
                     .then(function (response) {
                         outfit.likeCount = response.data.likeCount;
                         outfit.liked = response.data.liked;
@@ -321,7 +322,7 @@ angular
                 const userData = JSON.parse(localStorage.getItem("user"));
 
                 $http
-                    .post(`http://localhost:4000/outfits/${outfit._id}/like`, {
+                    .post(`${API_URL}/outfits/${outfit._id}/like`, {
                         userId: userData._id,
                     })
                     .then(function (response) {
@@ -497,7 +498,7 @@ angular
                 }
 
                 $http
-                    .put(`http://localhost:4000/user/${vm.user._id}`, {
+                    .put(`${API_URL}/user/${vm.user._id}`, {
                         username: vm.newUsername,
                     })
                     .then(function (response) {
@@ -527,7 +528,7 @@ angular
                 }).then((willDelete) => {
                     if (willDelete) {
                         $http
-                            .delete(`http://localhost:4000/user/${vm.user._id}`)
+                            .delete(`${API_URL}/user/${vm.user._id}`)
                             .then(function (response) {
                                 vm.isEditUsernameVisible = false;
                                 localStorage.removeItem("user");
@@ -547,10 +548,10 @@ angular
 
                 // Get user data
                 $http
-                    .get(`http://localhost:4000/user/${currentUsername}`)
+                    .get(`${API_URL}/user/${currentUsername}`)
                     .then(function (response) {
                         vm.user = response.data;
-                        return $http.get(`http://localhost:4000/outfits/user/${vm.user._id}`);
+                        return $http.get(`${API_URL}/outfits/user/${vm.user._id}`);
                     })
                     .then(function (response) {
                         vm.userOutfits = response.data;
@@ -605,7 +606,7 @@ angular
                 };
 
                 $http
-                    .post("http://localhost:4000/outfits", outfitData)
+                    .post(`${API_URL}/outfits`, outfitData)
                     .then(function (response) {
                         swal("Success!", "Outfit created successfully", "success");
                         vm.closePopup();
@@ -666,7 +667,7 @@ angular
                 }
 
                 $http
-                    .put(`http://localhost:4000/outfits/${vm.editingOutfit._id}`, vm.editingOutfit)
+                    .put(`${API_URL}/outfits/${vm.editingOutfit._id}`, vm.editingOutfit)
                     .then(function (response) {
                         swal("Success!", "Outfit updated successfully", "success");
                         vm.closeEditOutfit();
@@ -694,7 +695,7 @@ angular
                     if (willDelete) {
                         $http({
                             method: "DELETE",
-                            url: "http://localhost:4000/outfits",
+                            url: `${API_URL}/outfits`,
                             data: { outfitIds: vm.selectedOutfits },
                             headers: {
                                 "Content-Type": "application/json",
