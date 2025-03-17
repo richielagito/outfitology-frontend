@@ -1,0 +1,174 @@
+<div class="profile-header">
+  <button class="logout-button" ng-click="profile.logout()">Logout</button>
+  <a href="#!/" id="backButton" class="back-button" ng-click="profile.goBack()"
+    >← Back</a
+  >
+  <img src="icons/user-solid.svg" alt="Profile Picture" class="profile-image" />
+
+  <div class="profile-info">
+    <h1>{{profile.user.username}}</h1>
+    <button class="edit-profile-btn" ng-click="profile.openEditUsername()">
+      Edit Profile
+    </button>
+  </div>
+</div>
+
+<div class="profile-tabs">
+  <button>Created</button>
+</div>
+
+<div class="created-outfit">
+  <button class="create-btn" ng-click="profile.openCreatePopup()">
+    Create Outfit
+  </button>
+
+  <div class="bulk-actions" ng-if="profile.selectedOutfits.length > 0">
+    <button
+      class="delete-selected-btn"
+      ng-click="profile.deleteSelectedOutfits()"
+    >
+      Delete Selected ({{profile.selectedOutfits.length}})
+    </button>
+  </div>
+
+  <div class="outfit-grid" ng-if="profile.userOutfits.length > 0">
+    <div class="outfit-card" ng-repeat="outfit in profile.userOutfits">
+      <div class="outfit-selection">
+        <input
+          type="checkbox"
+          ng-click="profile.toggleOutfitSelection(outfit._id)"
+        />
+      </div>
+      <img ng-src="{{outfit.image}}" alt="{{outfit.name}}" />
+      <h3>{{outfit.name}}</h3>
+      <p>{{outfit.description}}</p>
+      <button class="edit-btn" ng-click="profile.openEditOutfit(outfit)">
+        Edit
+      </button>
+    </div>
+  </div>
+
+  <p ng-if="!profile.userOutfits.length">
+    Nothing to show... yet! Pins you create will live here.
+  </p>
+</div>
+
+<!-- Edit Username Popup -->
+<div
+  class="popup-overlay"
+  ng-show="profile.isEditUsernameVisible"
+  ng-click="profile.closeEditUsername($event)"
+>
+  <div class="popup-content edit-username">
+    <h2>Edit Profile</h2>
+    <div class="form-group">
+      <label for="newUsername">New Username</label>
+      <input
+        type="text"
+        id="newUsername"
+        ng-model="profile.newUsername"
+        placeholder="Enter new username"
+      />
+    </div>
+    <div class="popup-actions">
+      <button class="submit-btn" ng-click="profile.updateUsername()">
+        Save Changes
+      </button>
+      <button class="cancel-btn" ng-click="profile.closeEditUsername()">
+        Cancel
+      </button>
+    </div>
+    <div class="delete-section">
+      <hr class="divider" />
+      <button class="delete-btn" ng-click="profile.deleteAccount()">
+        Delete Account
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Outfit Popup -->
+<div
+  class="popup-overlay"
+  ng-show="profile.isPopupVisible"
+  ng-click="profile.closePopup($event)"
+>
+  <div class="popup-content">
+    <h2>Create New Outfit</h2>
+    <div class="form-group">
+      <label for="outfitName">Outfit Name</label>
+      <input
+        type="text"
+        id="outfitName"
+        ng-model="profile.newOutfit.name"
+        placeholder="Enter outfit name"
+      />
+    </div>
+    <div class="form-group">
+      <label for="outfitDescription">Description</label>
+      <textarea
+        id="outfitDescription"
+        ng-model="profile.newOutfit.description"
+        placeholder="Enter outfit description"
+      ></textarea>
+    </div>
+    <div class="form-group">
+      <label for="outfitImage">Image URL</label>
+      <input
+        type="text"
+        id="outfitImage"
+        ng-model="profile.newOutfit.image"
+        placeholder="Enter image URL"
+      />
+    </div>
+    <div class="popup-actions">
+      <button class="submit-btn" ng-click="profile.submitOutfit()">Save</button>
+      <button class="cancel-btn" ng-click="profile.closePopup()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Outfit Popup -->
+<div
+  class="popup-overlay"
+  ng-show="profile.isEditOutfitVisible"
+  ng-click="profile.closeEditOutfit($event)"
+>
+  <div class="popup-content">
+    <h2>Edit Outfit</h2>
+    <div class="form-group">
+      <label for="editOutfitName">Outfit Name</label>
+      <input
+        type="text"
+        id="editOutfitName"
+        ng-model="profile.editingOutfit.name"
+        placeholder="Enter outfit name"
+      />
+    </div>
+    <div class="form-group">
+      <label for="editOutfitDescription">Description</label>
+      <textarea
+        id="editOutfitDescription"
+        ng-model="profile.editingOutfit.description"
+        placeholder="Enter outfit description"
+      ></textarea>
+    </div>
+    <div class="form-group">
+      <label for="editOutfitImage">Image URL</label>
+      <input
+        type="text"
+        id="editOutfitImage"
+        ng-model="profile.editingOutfit.image"
+        placeholder="Enter image URL"
+      />
+    </div>
+    <div class="popup-actions">
+      <button class="submit-btn" ng-click="profile.submitEditOutfit()">
+        Save Changes
+      </button>
+      <button class="cancel-btn" ng-click="profile.closeEditOutfit()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

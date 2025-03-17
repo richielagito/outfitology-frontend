@@ -1,0 +1,101 @@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+<div class="slider" ng-controller="HomeController as home">
+  <div class="slides" ng-style="{'transform': 'translateX(-' + home.currentSlide * 100 + '%)'}">
+    <div class="slide" ng-repeat="slide in home.slides" ng-style="{'background-image': 'url(' + slide.url + ')'}"></div>
+  </div>
+
+  <div class="arrow left-arrow" ng-click="home.prevSlide()">❮</div>
+  <div class="arrow right-arrow" ng-click="home.nextSlide()">❯</div>
+
+  <div class="dots">
+    <span class="dot" ng-repeat="slide in home.slides" ng-click="home.setCurrentSlide($index)" ng-class="{'active': home.isActive($index)}"></span>
+  </div>
+</div>
+
+<div class="recently-posted">
+  <h2>Recently Posted</h2>
+</div>
+
+<div id="imageModal" class="modal" ng-show="home.modalOpen">
+  <div id="caption" class="caption">{{home.selectedOutfit.caption}}</div>
+</div>
+
+<!-- Image Grid -->
+<div class="image-grid">
+  <div class="outfit-card" ng-repeat="outfit in home.userOutfits">
+    <div class="outfit-image">
+      <img ng-src="{{outfit.url}}" alt="{{outfit.alt}}" ng-click="home.openImage(outfit)" />
+    </div>
+    <div class="outfit-info">
+      <div class="like-section">
+        <button class="tombol" ng-click="home.toggleLike(outfit)" ng-class="{'liked': outfit.liked}">❤</button>
+        <span>{{outfit.likeCount}} likes</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="imageModal" class="modal" ng-show="home.modalOpen" ng-click="home.closeModal()">
+  <!-- Overlay -->
+  <div class="modal-overlay" ng-click="$event.stopPropagation()">
+    <!-- Selected Image -->
+    <img ng-src="{{home.selectedOutfit.url}}" alt="{{home.selectedOutfit.alt}}" />
+
+    <div class="image-grid">
+      <div class="outfit-card" ng-repeat="outfit in home.userOutfits">
+        <img ng-src="{{outfit.url}}" alt="{{outfit.outfitName}}" ng-click="home.openImage(outfit)" />
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="imageModal" class="modal" ng-show="home.modalOpen" ng-click="home.closeModal()">
+      <div class="modal-content" ng-click="$event.stopPropagation()">
+        <!-- Left side - Image -->
+        <img ng-src="{{home.selectedOutfit.url}}" alt="{{home.selectedOutfit.outfitName}}" />
+
+        <!-- Right side - Info & Interactions -->
+        <div class="modal-info">
+          <div class="modal-header">
+            <!-- User & Outfit Info -->
+            <div>
+              <p class="username">{{home.selectedOutfit.username}}</p>
+              <p class="caption">{{home.selectedOutfit.outfitName}}</p>
+              <p class="description">{{home.selectedOutfit.description}}</p>
+            </div>
+          </div>
+
+          <!-- Comments Section -->
+          <div class="sectionbesar">
+            <div class="like-section">
+              <button class="tombol" ng-click="home.toggleLike(home.selectedOutfit)" ng-class="{'liked': home.selectedOutfit.liked}">❤</button>
+              <span>{{home.selectedOutfit.likeCount}} likes</span>
+            </div>
+
+            <h4 class="comments-top-text">Comments</h4>
+            <div class="comments-section">
+              <div class="comments-container">
+                <div class="comment" ng-repeat="comment in home.selectedOutfit.comments">
+                  <div class="comment-header">
+                    <strong>{{comment.userId.username}}</strong>
+                    <div class="comment-actions" ng-if="comment.userId._id === home.currentUser._id">
+                      <button ng-click="home.updateComment(home.selectedOutfit, comment)" class="edit-btn">Edit</button>
+                      <button ng-click="home.deleteComment(home.selectedOutfit, comment)" class="delete-btn">Delete</button>
+                    </div>
+                  </div>
+                  <div class="comment-text">{{comment.text}}</div>
+                </div>
+              </div>
+
+              <div class="comment-input-section">
+                <input type="text" ng-model="home.selectedOutfit.newComment" placeholder="Add a comment..." ng-keypress="$event.keyCode === 13 && home.addComment(home.selectedOutfit)" />
+                <button ng-click="home.addComment(home.selectedOutfit)">Post</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

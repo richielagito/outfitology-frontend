@@ -1,0 +1,428 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background-color: #fafafa;
+}
+
+nav,
+footer {
+  display: none;
+}
+
+/* Back Button */
+.back-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 15px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #ff885b;
+  padding: 10px 15px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #e57c4d;
+}
+
+.logout-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 5px;
+  background-color: #e6e6e6;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #d4d4d4;
+}
+
+.profile-header {
+  text-align: center;
+  padding: 50px 0;
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.profile-info {
+  text-align: center;
+}
+
+.profile-info h1 {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+/* Edit Profile Button */
+.edit-profile-btn {
+  margin-top: 15px;
+  padding: 5px 5px;
+  background-color: #e6e6e6;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.edit-profile-btn:hover {
+  background-color: #d4d4d4;
+}
+
+.profile-tabs {
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+  position: relative;
+}
+
+.profile-tabs button {
+  padding: 12px 24px;
+  font-size: 16px;
+  color: #ff885b;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  border-radius: 8px;
+}
+
+.profile-tabs button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 2px;
+  background-color: #ff885b;
+}
+
+.tab-content {
+  text-align: center;
+}
+
+.created-outfit {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.created-outfit p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.create-btn,
+.find-ideas-btn {
+  margin-bottom: 15px;
+  padding: 10px 20px;
+  background-color: #ff885b;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.create-btn:hover,
+.find-ideas-btn:hover {
+  background-color: #e57c4d;
+}
+
+.outfit-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.outfit-card {
+  flex: 1 1 calc(20% - 15px);
+  max-width: calc(20% - 15px);
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.outfit-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.outfit-card h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 10px 0 5px;
+}
+
+.outfit-card p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Popup Styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s 0.3s, opacity 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.popup-overlay.ng-show {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.popup-content h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.popup-content .form-group {
+  margin-bottom: 20px;
+}
+
+.popup-content label {
+  font-size: 16px;
+  color: #555;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.popup-content input,
+.popup-content textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.popup-content textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.popup-actions button {
+  flex: 1;
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.popup-actions .submit-btn {
+  background-color: #ff885b;
+  color: white;
+}
+
+.popup-actions .submit-btn:hover {
+  background-color: #e57c4d;
+}
+
+.popup-actions .cancel-btn {
+  background-color: #ccc;
+  color: white;
+}
+
+.popup-actions .cancel-btn:hover {
+  background-color: #b3b3b3;
+}
+
+.popup-content.edit-username {
+  text-align: center;
+}
+
+.popup-content.edit-username .form-group {
+  text-align: left;
+}
+
+.delete-section {
+  margin-top: 30px;
+  text-align: left;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
+}
+
+.delete-btn {
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #fff;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.bulk-actions {
+  width: 100%;
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.delete-selected-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-selected-btn:hover {
+  background-color: #c82333;
+}
+
+.outfit-selection {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+.outfit-selection input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.outfit-card {
+  position: relative;
+}
+
+.edit-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .outfit-card {
+    flex: 1 1 calc(50% - 15px);
+    max-width: calc(50% - 15px);
+  }
+
+  .profile-tabs {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+    position: relative;
+  }
+
+  .profile-tabs button {
+    padding: 12px 24px;
+    font-size: 16px;
+    color: #ff885b;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    border-radius: 8px;
+  }
+
+  .profile-tabs button::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 2px;
+    background-color: #ff885b;
+  }
+
+  .popup-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .profile-header {
+    padding: 20px 0;
+  }
+
+  .profile-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .outfit-grid {
+    gap: 10px;
+  }
+}

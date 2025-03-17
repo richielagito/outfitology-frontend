@@ -1,0 +1,33 @@
+<div class="main-register-container">
+  <div class="photo-login"></div>
+
+  <div class="register-container">
+    <h1 class="logo" id="outfitology"><span class="orange">Outfit</span>ology</h1>
+
+    <form class="form" ng-submit="register.submitForm()" name="registerForm" novalidate>
+      <div class="input-group">
+        <input type="text" placeholder=" " id="username" ng-model="register.user.name" required />
+        <label for="username">Name</label>
+      </div>
+
+      <div class="input-group">
+        <input type="email" placeholder=" " id="email" ng-model="register.user.email" required />
+        <label for="email">Email</label>
+      </div>
+
+      <div class="input-group">
+        <input type="password" placeholder=" " id="password" ng-model="register.user.password" required />
+        <label for="password">Password</label>
+      </div>
+
+      <button type="submit" class="register-button" ng-disabled="registerForm.$invalid">Register</button>
+    </form>
+
+    <div class="checkbox">
+      <input type="checkbox" id="subscribe" />
+      <label for="subscribe">Subscribe to us for tips and updates*</label>
+    </div>
+
+    <div class="login">Already have an account? <a href="#!/login">Login</a></div>
+  </div>
+</div>
