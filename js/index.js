@@ -49,7 +49,7 @@ angular.module("outfitologyApp").factory("UnsplashService", [
                 return $http({
                     method: "GET",
                     url: `${API_URL}/api/unsplash`,
-                    params: { query: userQuery || "fashion, streetwear, outfit, casual outfit" },
+                    params: { query: `${userQuery}, fashion` || "fashion, streetwear, outfit, casual outfit" },
                 });
             },
         };
@@ -86,46 +86,6 @@ angular
                 },
             ];
 
-            // Outfit images
-            vm.outfits = [
-                {
-                    url: "https://i.pinimg.com/736x/e0/06/c7/e006c7ef8cec205365c1ac1474c41650.jpg",
-                    alt: "Outfit 1",
-                    caption: "Stylish Summer Outfit",
-                    comments: [], // Array to hold comments
-                    newComment: "", // Input for adding a new comment
-                    likeCount: 0, // Counter for likes
-                    liked: false, // Boolean to track like status
-                },
-                {
-                    url: "https://i.pinimg.com/564x/c3/ed/10/c3ed101126a804d5a87f913c38a14fc7.jpg",
-                    alt: "Outfit 2",
-                    caption: "Casual Chic Look",
-                    comments: [],
-                    newComment: "",
-                    likeCount: 0,
-                    liked: false,
-                },
-                {
-                    url: "https://i.pinimg.com/564x/3f/3f/ce/3f3fcebede07d307dbf6bfe6215e2e68.jpg",
-                    alt: "Outfit 3",
-                    caption: "Elegant Party Dress",
-                    comments: [],
-                    newComment: "",
-                    likeCount: 0,
-                    liked: false,
-                },
-                {
-                    url: "https://i.pinimg.com/736x/49/64/79/496479a5fdb733d1d7f119bd8cf3c41d.jpg",
-                    alt: "Outfit 4",
-                    caption: "Urban Streetwear",
-                    comments: [],
-                    newComment: "",
-                    likeCount: 0,
-                    liked: false,
-                },
-            ];
-
             vm.fetchOutfits = function () {
                 $http
                     .get(`${API_URL}/outfits`)
@@ -158,9 +118,9 @@ angular
 
             // Open modal
             vm.openImage = function (outfit) {
-                console.log("Opening outfit:", outfit); // Debugging
                 vm.selectedOutfit = outfit;
                 vm.modalOpen = true;
+                document.body.classList.add("modal-open");
                 if (outfit._id) {
                     vm.fetchComments(outfit);
                 }
@@ -170,6 +130,7 @@ angular
             vm.closeModal = function () {
                 vm.modalOpen = false;
                 vm.selectedOutfit = null;
+                document.body.classList.remove("modal-open");
             };
 
             // Toggle like for a specific outfit
@@ -737,6 +698,10 @@ angular
                 });
             };
 
+            function getColumnCount() {
+                return window.innerWidth <= 800 ? 4 : 5; // 2 kolom di mobile, 5 di desktop
+            }
+
             vm.fetchImageData = function (searchQuery) {
                 if (vm.fetching) return;
 
@@ -749,11 +714,13 @@ angular
                             vm.originalImages = vm.originalImages.concat(response.data);
 
                             if (vm.page === 1) {
-                                vm.columns = [[], [], [], [], []];
+                                const columnCount = getColumnCount();
+                                vm.columns = Array.from({ length: columnCount }, () => []);
                             }
 
                             response.data.forEach(function (image, index) {
-                                vm.createCard(image.urls.small, index % 5);
+                                const columnCount = getColumnCount();
+                                vm.createCard(image.urls.small, index % columnCount);
                             });
                         }
                     })

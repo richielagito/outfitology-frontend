@@ -1,14 +1,14 @@
 <div id="explore-page" class="explore">
-  <div class="loader-container" ng-show="explore.isLoading">
-    <div id="loader" ng-show="explore.isLoading"></div>
-    <div class="loader-text" ng-show="explore.isLoading">Loading outfits for you (｡•̀ᴗ-)✧</div>
-  </div>
-
-  <div id="container">
-    <div class="col" ng-repeat="column in explore.columns">
-      <div class="card" ng-repeat="image in column">
-        <img ng-src="{{image.imageUrl}}" alt="Fashion Image" ng-style="{'width': '100%'}" ng-show="!image.error" ng-load="image.loaded = true; explore.isLoading = false" ng-error="image.error = true" />
-      </div>
+    <div class="loader-container" ng-show="explore.isLoading">
+        <div id="loader" ng-show="explore.isLoading"></div>
+        <div class="loader-text" ng-show="explore.isLoading">Loading outfits for you (｡•̀ᴗ-)✧</div>
     </div>
-  </div>
+
+    <div id="container">
+        <div class="col" ng-repeat="column in explore.columns">
+            <div class="card" ng-repeat="image in column">
+                <img ng-src="{{image.imageUrl}}" alt="Fashion Image" ng-style="{'width': '100%'}" ng-show="!image.error" ng-load="image.loaded = true; explore.isLoading = false" ng-error="image.error = true" />
+            </div>
+        </div>
+    </div>
 </div>
