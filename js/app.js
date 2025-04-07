@@ -127,5 +127,13 @@ angular
                     $timeout.cancel(searchTimeout);
                 }
             });
+
+            $timeout(function () {
+                const loader = document.getElementById("initial-loader");
+                if (loader) {
+                    loader.style.opacity = 0;
+                    setTimeout(() => loader.remove(), 300);
+                }
+            }, 300);
         },
     ]);
