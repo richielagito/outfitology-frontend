@@ -247,16 +247,18 @@ angular
 
             // fetch likes
             vm.fetchLikes = function (outfit) {
-                if (!AuthService.isLoggedIn()) return;
+                if (!outfit._id) return;
 
-                const userData = JSON.parse(localStorage.getItem("user"));
-                if (!outfit._id || !userData) return;
+                const userData = JSON.parse(localStorage.getItem("user")); // Ambil data user dari localStorage
+                const userId = userData ? userData._id : null; // Ambil userId jika user login
 
                 $http
-                    .get(`${API_URL}/outfits/${outfit._id}/likes?userId=${userData._id}`)
+                    .get(`${API_URL}/outfits/${outfit._id}/likes`, {
+                        params: { userId: userId }, // Kirim userId sebagai parameter jika ada
+                    })
                     .then(function (response) {
                         outfit.likeCount = response.data.likeCount;
-                        outfit.liked = response.data.liked;
+                        outfit.liked = response.data.liked || false;
                     })
                     .catch(function (error) {
                         console.error("Error fetching likes:", error);
@@ -330,6 +332,23 @@ angular
 
             function storeUserSession(userData) {
                 localStorage.setItem("user", JSON.stringify(userData));
+            }
+
+            function checkSessionExpiration() {
+                const userData = JSON.parse(localStorage.getItem("user"));
+                if (userData && userData.loginTime) {
+                    const loginTime = new Date(userData.loginTime);
+                    const currentTime = new Date();
+                    const timeDifference = currentTime - loginTime; // Selisih waktu dalam milidetik
+
+                    // Jika lebih dari 1 hari (24 jam)
+                    if (timeDifference > 24 * 60 * 60 * 1000) {
+                        localStorage.removeItem("user"); // Hapus session
+                        swal("Session Expired", "Your session has expired. Please login again.", "warning").then(() => {
+                            window.location.href = "/login"; // Redirect ke halaman login
+                        });
+                    }
+                }
             }
 
             vm.submitForm = function () {
@@ -537,6 +556,34 @@ angular
                 }
             };
 
+            // Get the file input element
+            const fileInput = document.querySelector(".input-file");
+            const label = document.querySelector(".js-labelFile");
+            const fileName = document.querySelector(".js-fileName");
+            const icon = document.querySelector(".icon");
+            const originalLabel = fileName.innerHTML;
+
+            // Add event listener for when the file is selected
+            fileInput.addEventListener("change", function (e) {
+                let fileNameValue = "";
+
+                if (this.files && this.files.length > 0) {
+                    fileNameValue = this.files[0].name;
+                }
+
+                if (fileNameValue) {
+                    fileName.innerHTML = fileNameValue;
+                    label.classList.add("has-file");
+                    icon.classList.remove("fa-upload");
+                    icon.classList.add("fa-check");
+                } else {
+                    fileName.innerHTML = originalLabel;
+                    label.classList.remove("has-file");
+                    icon.classList.remove("fa-check");
+                    icon.classList.add("fa-upload");
+                }
+            });
+
             vm.submitOutfit = function () {
                 if (!AuthService.isLoggedIn()) {
                     swal("Error!", "Please login first", "error");
@@ -544,29 +591,56 @@ angular
                     return;
                 }
 
-                if (!vm.newOutfit.name || !vm.newOutfit.description || !vm.newOutfit.image) {
-                    swal("Error!", "Please fill all fields", "error");
-                    return;
-                }
+                const form = document.getElementById("outfitForm");
+                form.addEventListener("submit", async (e) => {
+                    e.preventDefault();
 
-                const outfitData = {
-                    name: vm.newOutfit.name,
-                    description: vm.newOutfit.description,
-                    image: vm.newOutfit.image,
-                    userId: vm.user._id,
-                };
+                    const name = form.name.value.trim();
+                    const description = form.description.value.trim();
+                    const image = form.image.files[0];
 
-                $http
-                    .post(`${API_URL}/outfits`, outfitData)
-                    .then(function (response) {
-                        swal("Success!", "Outfit created successfully", "success");
-                        vm.closePopup();
-                        vm.fetchUserData(); // Refresh semua data
-                    })
-                    .catch(function (error) {
-                        console.error("Error creating outfit:", error);
-                        swal("Error!", error.data?.message || "Failed to create outfit", "error");
-                    });
+                    // Validasi kosong
+                    if (!name || !description || !image) {
+                        swal("Oops!", "You need to fill all fields to continue", "warning");
+                        return;
+                    }
+
+                    // Validasi tipe file
+                    const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
+                    if (!allowedTypes.includes(image.type)) {
+                        swal("Oops!", "Image type is not supported", "warning");
+                        return;
+                    }
+
+                    const maxSize = 10 * 1024 * 1024;
+                    if (image.size > maxSize) {
+                        swal("Oops!", "Image size exceed 10MB", "warning");
+                        return;
+                    }
+
+                    const formData = new FormData(form);
+                    const userId = vm.user._id;
+                    formData.append("userId", userId);
+
+                    try {
+                        const response = await fetch(`${API_URL}/outfits`, {
+                            method: "POST",
+                            body: formData,
+                        });
+
+                        const result = await response.json();
+                        if (response.ok) {
+                            swal("Success!", "Outfit created successfully", "success");
+                            vm.closePopup();
+                            vm.fetchUserData();
+                        } else {
+                            console.error("Error creating outfit:", error);
+                            swal("Error!", error.data?.message || "Failed to create outfit", "error");
+                        }
+                    } catch (error) {
+                        console.error("Terjadi kesalahan: " + error.message);
+                    }
+                });
             };
 
             vm.toggleOutfitSelection = function (outfitId) {
@@ -584,7 +658,6 @@ angular
                     _id: outfit._id,
                     name: outfit.name,
                     description: outfit.description,
-                    image: outfit.image,
                 };
                 vm.isEditOutfitVisible = true;
             };
@@ -597,7 +670,6 @@ angular
                         _id: null,
                         name: "",
                         description: "",
-                        image: "",
                     };
                 } else if (!event) {
                     vm.isEditOutfitVisible = false;
@@ -605,14 +677,13 @@ angular
                         _id: null,
                         name: "",
                         description: "",
-                        image: "",
                     };
                 }
             };
 
             // Add method to submit edited outfit
             vm.submitEditOutfit = function () {
-                if (!vm.editingOutfit.name || !vm.editingOutfit.description || !vm.editingOutfit.image) {
+                if (!vm.editingOutfit.name || !vm.editingOutfit.description) {
                     swal("Error!", "Please fill all fields", "error");
                     return;
                 }
@@ -653,7 +724,7 @@ angular
                             },
                         })
                             .then(function (response) {
-                                swal("Success!", response.data.message, "success");
+                                swal("Success!", "Successfully deleted your outifts", "success");
                                 vm.selectedOutfits = [];
                                 vm.fetchUserData();
                             })
@@ -699,7 +770,13 @@ angular
             };
 
             function getColumnCount() {
-                return window.innerWidth <= 800 ? 4 : 5; // 2 kolom di mobile, 5 di desktop
+                if (window.innerWidth <= 800) {
+                    return 2; // 2 kolom untuk layar kecil (mobile)
+                } else if (window.innerWidth <= 1024) {
+                    return 3; // 3 kolom untuk layar sedang (tablet)
+                } else {
+                    return 5; // 5 kolom untuk layar besar (desktop)
+                }
             }
 
             vm.fetchImageData = function (searchQuery) {
