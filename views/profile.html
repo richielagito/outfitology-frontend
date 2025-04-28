@@ -14,7 +14,7 @@
 </div>
 
 <div class="created-outfit">
-    <button class="create-btn" ng-click="profile.openCreatePopup()">Post New Fits</button>
+    <button class="create-btn" ng-click="profile.openCreatePopup()"><i class="fa fa-solid fa-plus"></i></button>
 
     <div class="bulk-actions" ng-if="profile.selectedOutfits.length > 0">
         <button class="delete-selected-btn" ng-click="profile.deleteSelectedOutfits()">Delete Selected ({{profile.selectedOutfits.length}})</button>
@@ -22,13 +22,17 @@
 
     <div class="outfit-grid" ng-if="profile.userOutfits.length > 0">
         <div class="outfit-card" ng-repeat="outfit in profile.userOutfits">
-            <div class="outfit-selection">
-                <input type="checkbox" ng-click="profile.toggleOutfitSelection(outfit._id)" />
+            <div class="outfit-content">
+                <div class="outfit-selection">
+                    <input type="checkbox" ng-click="profile.toggleOutfitSelection(outfit._id)" />
+                </div>
+                <img ng-src="{{outfit.image}}" alt="{{outfit.name}}" />
+                <div class="caption">
+                    <h3>{{outfit.name}}</h3>
+                    <p>{{outfit.description}}</p>
+                </div>
+                <button class="edit-btn" ng-click="profile.openEditOutfit(outfit)"><i class="icon-pencil fa fa-solid fa-pencil"></i>Edit</button>
             </div>
-            <img ng-src="{{outfit.image}}" alt="{{outfit.name}}" />
-            <h3>{{outfit.name}}</h3>
-            <p>{{outfit.description}}</p>
-            <button class="edit-btn" ng-click="profile.openEditOutfit(outfit)"><i class="icon-pencil fa fa-solid fa-pencil"></i>Edit</button>
         </div>
     </div>
 
@@ -58,7 +62,7 @@
 <div class="popup-overlay" ng-show="profile.isPopupVisible" ng-click="profile.closePopup($event)">
     <div class="popup-content">
         <form id="outfitForm">
-            <h2>Create your Fits</h2>
+            <h2>Post your Fits</h2>
             <div class="form-group file-upload">
                 <input type="file" class="input-file" id="outfitImage" name="image" accept="image/*" ng-model="profile.newOutfit.image" /><br />
                 <label for="outfitImage" class="btn btn-tertiary js-labelFile"><i class="icon fa fa-upload"></i><span class="js-fileName">Choose an Image</span></label>

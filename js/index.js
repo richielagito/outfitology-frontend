@@ -157,7 +157,7 @@ angular
 
             vm.addComment = function (outfit) {
                 if (!AuthService.isLoggedIn()) {
-                    swal("Error!", "Please login to comment", "error");
+                    swal("Hold On!", "You need to login to comment", "error");
                     return;
                 }
 
@@ -268,7 +268,7 @@ angular
             // Update the toggleLike function
             vm.toggleLike = function (outfit) {
                 if (!AuthService.isLoggedIn()) {
-                    swal("Error!", "Please login to like outfits", "error");
+                    swal("Hold On!", "You need to login to like outfits", "error");
                     return;
                 }
 

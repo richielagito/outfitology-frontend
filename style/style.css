@@ -158,7 +158,7 @@ body.modal-open {
 .slider {
     position: relative;
     width: 100%;
-    height: 85dvh;
+    height: 85vh;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
@@ -172,7 +172,7 @@ body.modal-open {
 
 .slide {
     flex: 0 0 100%;
-    height: 85dvh;
+    height: 85vh;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -256,7 +256,29 @@ body.modal-open {
 }
 
 @media screen and (max-width: 600px) {
-    .image-grid {
+    .comment-input-section {
+        /* position: fixed;
+        bottom: env(safe-area-inset-bottom, 0);
+        left: 0; */
+        /* z-index: 1000; */
+        width: 100%;
+        padding: 16px;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .close-button-container {
+        display: block;
+        position: fixed;
+        top: env(safe-area-inset-top, 0);
+        left: 0;
+        background-color: #fff;
+        width: 100%;
+        margin: 0px !important;
+        padding: 10px !important;
+    }
+    .modal-content .image-grid {
         grid-template-columns: 1fr;
     }
 
@@ -271,19 +293,25 @@ body.modal-open {
     }
 
     .modal .modal-content {
-        width: 100dvw;
-        height: 100vh;
+        width: 100vw;
+        height: 100dvh;
         margin: 0;
         border-radius: 0px;
 
+        .modal-info {
+            height: 100svh;
+            justify-content: start;
+        }
+
         img {
-            width: 100dvw;
+            width: 100vw;
             object-position: center;
+            margin-top: 45.6px;
         }
     }
 }
 
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 1024px) {
     .hamburger {
         display: block;
     }
@@ -394,6 +422,7 @@ body.modal-open {
     background-color: #fff;
     width: 100%;
     margin: 10px;
+    padding-top: env(safe-area-inset-top, 0);
 }
 
 .close-button {
@@ -412,7 +441,6 @@ body.modal-open {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-left: 1px solid #eee;
 }
 
 .modal-header {
@@ -474,6 +502,7 @@ body.modal-open {
     flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
     overflow: hidden;
 }
 

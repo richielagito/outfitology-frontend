@@ -40,13 +40,13 @@
 <div id="imageModal" class="modal" ng-show="home.modalOpen" ng-click="home.closeModal()">
             <div class="modal-content" ng-click="$event.stopPropagation()">
                 <div class="close-button-container" ><i class="close-button fa fa-sharp fa-arrow-left" ng-click="home.closeModal()"></i></div>
-                <!-- Left side - Image -->
+
                 <img ng-src="{{home.selectedOutfit.url}}" alt="{{home.selectedOutfit.outfitName}}" />
 
-                <!-- Right side - Info & Interactions -->
+
                 <div class="modal-info">
                     <div class="modal-header">
-                        <!-- User & Outfit Info -->
+
                         <div>
                             <p class="username">{{home.selectedOutfit.username}}</p>
                             <p class="caption">{{home.selectedOutfit.outfitName}}</p>
@@ -54,36 +54,35 @@
                         </div>
                     </div>
 
-                    <!-- Comments Section -->
-                    <div class="sectionbesar">
-                        <div class="like-section">
-                            <div class="like-container">
-                                <button class="tombol" ng-click="home.toggleLike(home.selectedOutfit)" ng-class="{'liked': home.selectedOutfit.liked}"><i class="fa fa-solid fa-heart big-heart"></i></button>
-                                <span>{{home.selectedOutfit.likeCount}} Likes</span>
-                            </div>
-                        </div>
-
-                        <h4 class="comments-top-text">Comments</h4>
-                        <div class="comments-section">
-                            <div class="comments-container">
-                                <div class="comment" ng-repeat="comment in home.selectedOutfit.comments">
-                                    <div class="comment-header">
-                                        <strong>{{comment.userId.username}}</strong>
-                                        <div class="comment-actions" ng-if="comment.userId._id === home.currentUser._id">
-                                            <button ng-click="home.updateComment(home.selectedOutfit, comment)" class="edit-btn">Edit</button>
-                                            <button ng-click="home.deleteComment(home.selectedOutfit, comment)" class="delete-btn">Delete</button>
-                                        </div>
-                                    </div>
-                                    <div class="comment-text">{{comment.text}}</div>
+                        <div class="sectionbesar">
+                            <div class="like-section">
+                                <div class="like-container">
+                                    <button class="tombol" ng-click="home.toggleLike(home.selectedOutfit)" ng-class="{'liked': home.selectedOutfit.liked}"><i class="fa fa-solid fa-heart big-heart"></i></button>
+                                    <span>{{home.selectedOutfit.likeCount}} Likes</span>
                                 </div>
                             </div>
-
-                            <div class="comment-input-section">
-                                <input type="text" ng-model="home.selectedOutfit.newComment" placeholder="Add a comment..." ng-keypress="$event.keyCode === 13 && home.addComment(home.selectedOutfit)" />
-                                <button ng-click="home.addComment(home.selectedOutfit)">Post</button>
+    
+                            <h4 class="comments-top-text">Comments</h4>
+                            <div class="comments-section">
+                                <div class="comments-container">
+                                    <div class="comment" ng-repeat="comment in home.selectedOutfit.comments">
+                                        <div class="comment-header">
+                                            <strong>{{comment.userId.username}}</strong>
+                                            <div class="comment-actions" ng-if="comment.userId._id === home.currentUser._id">
+                                                <button ng-click="home.updateComment(home.selectedOutfit, comment)" class="edit-btn">Edit</button>
+                                                <button ng-click="home.deleteComment(home.selectedOutfit, comment)" class="delete-btn">Delete</button>
+                                            </div>
+                                        </div>
+                                        <div class="comment-text">{{comment.text}}</div>
+                                    </div>
+                                </div>
+    
+                                <div class="comment-input-section">
+                                    <input type="text" ng-model="home.selectedOutfit.newComment" placeholder="Add a comment..." ng-keypress="$event.keyCode === 13 && home.addComment(home.selectedOutfit)" />
+                                    <button ng-click="home.addComment(home.selectedOutfit)">Post</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>

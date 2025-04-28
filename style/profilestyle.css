@@ -2,11 +2,16 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Roboto", sans-serif;
 }
 
 body {
     background-color: #fafafa;
+    font-family: "Poppins", sans-serif;
+}
+
+button {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
 }
 
 nav,
@@ -106,6 +111,7 @@ footer {
     cursor: pointer;
     position: relative;
     border-radius: 8px;
+    color: black;
 }
 
 .profile-tabs button::after {
@@ -128,32 +134,31 @@ footer {
     margin-top: 20px;
 }
 
-.created-outfit p {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 20px;
-}
-
-.create-btn,
-.find-ideas-btn {
-    margin-bottom: 15px;
-    padding: 10px 20px;
+.create-btn {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+    margin: 40px;
+    width: 70px;
+    height: 70px;
     background-color: #ff885b;
     color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 50%;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 30px;
+    box-shadow: 0 0 15px #a37564aa;
+    text-align: center;
 }
 
-.create-btn:hover,
-.find-ideas-btn:hover {
+.create-btn:hover {
     background-color: #e57c4d;
 }
 
 .outfit-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     justify-items: center;
     align-items: center;
@@ -162,17 +167,30 @@ footer {
 
 .outfit-card {
     width: 100%;
+    height: 100%;
     text-align: center;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h3,
+    p {
+        text-align: start;
+    }
+
+    .outfit-content .caption {
+        height: 100px;
+        max-height: 100px;
+        margin-bottom: 10px;
+    }
 }
 
 .outfit-card img {
+    aspect-ratio: 4 / 5;
     width: 100%;
-    height: auto;
+    height: 100%;
     border-radius: 8px;
     margin-bottom: 10px;
 }
@@ -180,7 +198,7 @@ footer {
 .outfit-card h3 {
     font-size: 16px;
     font-weight: 500;
-    margin: 10px 0 5px;
+    margin: 0px 0 5px;
 }
 
 .outfit-card p {
