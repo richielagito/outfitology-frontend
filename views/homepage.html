@@ -22,7 +22,7 @@
 <div class="image-grid">
     <div class="outfit-card" ng-repeat="outfit in home.userOutfits">
         <div class="outfit-image">
-            <img ng-src="{{outfit.url}}" alt="{{outfit.alt}}" ng-click="home.openImage(outfit)" />
+            <img loading="lazy" ng-src="{{outfit.url}}" alt="{{outfit.alt}}" ng-click="home.openImage(outfit)" />
         </div>
         <div class="outfit-info">
             <div class="like-section">
@@ -79,7 +79,10 @@
     
                                 <div class="comment-input-section">
                                     <input type="text" ng-model="home.selectedOutfit.newComment" placeholder="Add a comment..." ng-keypress="$event.keyCode === 13 && home.addComment(home.selectedOutfit)" />
-                                    <button ng-click="home.addComment(home.selectedOutfit)">Post</button>
+                                    <button ng-click="home.addComment(home.selectedOutfit)" ng-disabled="home.isLoading">
+                                        <span ng-if="!home.isLoading"><i class="fa fa-solid fa-arrow-right"></i></span>
+                                        <div ng-if="home.isLoading" class="loader"></div>
+                                    </button>
                                 </div>
                             </div>
                         </div>

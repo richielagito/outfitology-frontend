@@ -76,7 +76,10 @@
                 <textarea id="outfitDescription" name="description" ng-model="profile.newOutfit.description" placeholder="Enter outfit description"></textarea>
             </div>
             <div class="popup-actions">
-                <button class="submit-btn" type="submit" ng-click="profile.submitOutfit()">Save</button>
+                <button class="submit-btn" type="submit" ng-click="profile.submitOutfit()" ng-disabled="profile.isLoading">
+                    <span ng-if="!profile.isLoading">Save</span>
+                    <div ng-if="profile.isLoading" class="loader"></div>
+                </button>
                 <span class="cancel-btn" ng-click="profile.closePopup()">Cancel</span>
             </div>
         </form>

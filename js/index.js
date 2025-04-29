@@ -49,7 +49,9 @@ angular.module("outfitologyApp").factory("UnsplashService", [
                 return $http({
                     method: "GET",
                     url: `${API_URL}/api/unsplash`,
-                    params: { query: `${userQuery}, fashion` || "fashion, streetwear, outfit, casual outfit" },
+                    params: {
+                        query: `${userQuery} outfit, fashion` || "fashion, streetwear, outfit, casual outfit",
+                    },
                 });
             },
         };
@@ -72,19 +74,37 @@ angular
             vm.modalOpen = false;
             vm.selectedOutfit = null;
             vm.userOutfits = [];
+            vm.isLoading = false;
 
-            // Slider images
-            vm.slides = [
-                {
-                    url: "https://plus.unsplash.com/premium_photo-1708633003273-bed7672ddd81?q=80&w=1821&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            let photoOrientation = "";
+
+            if (window.innerWidth <= 800) {
+                photoOrientation = "portrait";
+            } else {
+                photoOrientation = "landscape";
+            }
+
+            console.log("Photo orientation:", photoOrientation);
+
+            $http({
+                method: "GET",
+                url: `${API_URL}/api/unsplash/slides`,
+                params: {
+                    query: "ootd",
+                    count: 3,
+                    orientation: photoOrientation,
                 },
-                {
-                    url: "https://plus.unsplash.com/premium_photo-1683817138481-dcdf64a40859?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                },
-                {
-                    url: "https://plus.unsplash.com/premium_photo-1708110920881-635419c3411f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                },
-            ];
+            })
+                .then(function (response) {
+                    vm.slides = response.data.map(function (image) {
+                        return {
+                            url: image.urls.regular,
+                        };
+                    });
+                })
+                .catch(function (error) {
+                    console.error("Error fetching images:", error);
+                });
 
             vm.fetchOutfits = function () {
                 $http
@@ -178,11 +198,14 @@ angular
                     text: outfit.newComment.trim(),
                 };
 
+                vm.isLoading = true;
+
                 $http
                     .post(`${API_URL}/comments`, commentData)
                     .then(function (response) {
                         outfit.comments.unshift(response.data.comment);
                         outfit.newComment = "";
+                        vm.isLoading = false;
                     })
                     .catch(function (error) {
                         console.error("Error adding comment:", error);
@@ -437,6 +460,8 @@ angular
                 image: "",
             };
 
+            vm.isLoading = false;
+
             vm.logout = function () {
                 localStorage.removeItem("user");
 
@@ -584,7 +609,7 @@ angular
                 }
             });
 
-            vm.submitOutfit = function () {
+            vm.submitOutfit = async function () {
                 if (!AuthService.isLoggedIn()) {
                     swal("Error!", "Please login first", "error");
                     $location.path("/login");
@@ -592,55 +617,60 @@ angular
                 }
 
                 const form = document.getElementById("outfitForm");
-                form.addEventListener("submit", async (e) => {
-                    e.preventDefault();
+                const name = form.name.value.trim();
+                const description = form.description.value.trim();
+                const image = form.image.files[0];
 
-                    const name = form.name.value.trim();
-                    const description = form.description.value.trim();
-                    const image = form.image.files[0];
+                // Validasi kosong
+                if (!name || !description || !image) {
+                    swal("Oops!", "You need to fill all fields to continue", "warning");
+                    return;
+                }
 
-                    // Validasi kosong
-                    if (!name || !description || !image) {
-                        swal("Oops!", "You need to fill all fields to continue", "warning");
-                        return;
+                // Validasi tipe file
+                const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
+                if (!allowedTypes.includes(image.type)) {
+                    swal("Oops!", "Image type is not supported", "warning");
+                    return;
+                }
+
+                const maxSize = 10 * 1024 * 1024;
+                if (image.size > maxSize) {
+                    swal("Oops!", "Image size exceed 10MB", "warning");
+                    return;
+                }
+
+                const formData = new FormData(form);
+                const userId = vm.user._id;
+                formData.append("userId", userId);
+
+                vm.isLoading = true;
+
+                try {
+                    const response = await fetch(`${API_URL}/outfits`, {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        swal("Success!", "Outfit created successfully", "success");
+                        vm.closePopup();
+                        vm.fetchUserData();
+                        form.reset();
+                        fileName.innerHTML = originalLabel;
+                        label.classList.remove("has-file");
+                        icon.classList.remove("fa-check");
+                        icon.classList.add("fa-upload");
+                    } else {
+                        console.error("Error creating outfit:", error);
+                        swal("Error!", error.data?.message || "Failed to create outfit", "error");
                     }
-
-                    // Validasi tipe file
-                    const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
-                    if (!allowedTypes.includes(image.type)) {
-                        swal("Oops!", "Image type is not supported", "warning");
-                        return;
-                    }
-
-                    const maxSize = 10 * 1024 * 1024;
-                    if (image.size > maxSize) {
-                        swal("Oops!", "Image size exceed 10MB", "warning");
-                        return;
-                    }
-
-                    const formData = new FormData(form);
-                    const userId = vm.user._id;
-                    formData.append("userId", userId);
-
-                    try {
-                        const response = await fetch(`${API_URL}/outfits`, {
-                            method: "POST",
-                            body: formData,
-                        });
-
-                        const result = await response.json();
-                        if (response.ok) {
-                            swal("Success!", "Outfit created successfully", "success");
-                            vm.closePopup();
-                            vm.fetchUserData();
-                        } else {
-                            console.error("Error creating outfit:", error);
-                            swal("Error!", error.data?.message || "Failed to create outfit", "error");
-                        }
-                    } catch (error) {
-                        console.error("Terjadi kesalahan: " + error.message);
-                    }
-                });
+                } catch (error) {
+                    console.error("Terjadi kesalahan: " + error.message);
+                } finally {
+                    vm.isLoading = false;
+                }
             };
 
             vm.toggleOutfitSelection = function (outfitId) {
