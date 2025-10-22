@@ -84,13 +84,11 @@ angular
                 photoOrientation = "landscape";
             }
 
-            console.log("Photo orientation:", photoOrientation);
-
             $http({
                 method: "GET",
                 url: `${API_URL}/api/unsplash/slides`,
                 params: {
-                    query: "ootd",
+                    query: "models",
                     count: 3,
                     orientation: photoOrientation,
                 },

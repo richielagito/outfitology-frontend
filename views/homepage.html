@@ -22,7 +22,7 @@
 <div class="image-grid">
     <div class="outfit-card" ng-repeat="outfit in home.userOutfits">
         <div class="outfit-image">
-            <img loading="lazy" ng-src="{{outfit.url}}" alt="{{outfit.alt}}" ng-click="home.openImage(outfit)" />
+            <img ng-src="{{outfit.url}}" alt="{{outfit.alt}}" ng-click="home.openImage(outfit)" />
         </div>
         <div class="outfit-info">
             <div class="like-section">

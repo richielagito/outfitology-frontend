@@ -100,7 +100,6 @@ angular
 
                 $rootScope.isMenuActive = false;
 
-                // Update current path for search visibility
                 $rootScope.currentPath = $location.path();
 
                 // Dynamic CSS handling
@@ -114,6 +113,14 @@ angular
 
                 var stylePath = viewStyleMap[$location.path()] || "views/style.css";
                 document.getElementById("dynamic-style").setAttribute("href", stylePath);
+
+                const loader = document.getElementById("initial-loader");
+                if (loader) {
+                    setTimeout(() => {
+                        loader.style.opacity = 0;
+                        setTimeout(() => loader.remove(), 300);
+                    }, 2000);
+                }
             });
 
             $rootScope.$on("$routeChangeError", function () {
@@ -121,19 +128,10 @@ angular
                 $location.path("/");
             });
 
-            // Cleanup on root scope destroy
             $rootScope.$on("$destroy", function () {
                 if (searchTimeout) {
                     $timeout.cancel(searchTimeout);
                 }
             });
-
-            $timeout(function () {
-                const loader = document.getElementById("initial-loader");
-                if (loader) {
-                    loader.style.opacity = 0;
-                    setTimeout(() => loader.remove(), 300);
-                }
-            }, 1000);
         },
     ]);
